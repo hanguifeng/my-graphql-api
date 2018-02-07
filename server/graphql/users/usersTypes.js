@@ -1,20 +1,21 @@
 import {
   GraphQLString,
-  GraphQLID,
+  GraphQLNonNull,
   GraphQLInputObjectType,
   GraphQLObjectType,
-  GraphQLNonNull,
 } from 'graphql';
+import graphqlRelay from '../../graphqlRelay';
 
 const UserType = new GraphQLObjectType({
   name: 'UserType',
-  description: 'User type definition',
-  fields: () => ({
-    id: {
-      type: new GraphQLNonNull(GraphQLID),
-    },
-    email: {
-      type: new GraphQLNonNull(GraphQLString),
+  description: 'User信息',
+  fields: () => Object.assign({
+    id: graphqlRelay.globalId,
+    // email: {
+    //   type: new GraphQLNonNull(GraphQLString),
+    // },
+    name: {
+      type: GraphQLString,
     },
   }),
 });
@@ -33,3 +34,4 @@ export {
   UserType,
   UserInputType,
 };
+export default 'dummy';

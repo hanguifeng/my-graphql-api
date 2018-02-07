@@ -21,6 +21,11 @@ const userQueries = {
             email: internet.email(),
           }))), 100),
       );
+      // const querySQL = `REPLACE INTO MaterialWeight (parentId, childId, org_id, amount) VALUES ${contents.join(', ')}`;
+      // await execSQLFactory(querySQL, {
+      //   type: Sequelize.QueryTypes.UPSERT,
+      //   transaction,
+      // });
       return users;
     },
   },
