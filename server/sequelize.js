@@ -3,11 +3,12 @@ import dataloaderSequelize from 'dataloader-sequelize';
 import config from './config';
 
 const sequelize = new Sequelize(
-  config.database,
-  config.username,
-  config.password,
+  config.devlopment.database,
+  config.devlopment.username,
+  config.devlopment.password,
   {
-    host: config.host,
+    host: config.devlopment.host,
+    dialect: 'mysql',
     pool: {
       max: 5,
       min: 0,

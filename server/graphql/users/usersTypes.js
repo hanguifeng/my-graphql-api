@@ -11,11 +11,13 @@ const UserType = new GraphQLObjectType({
   description: 'User信息',
   fields: () => Object.assign({
     id: graphqlRelay.globalId,
-    // email: {
-    //   type: new GraphQLNonNull(GraphQLString),
-    // },
     name: {
       type: GraphQLString,
+      resolve: async users => users.name,
+    },
+    password: {
+      type: GraphQLString,
+      resolve: async users => users.password,
     },
   }),
 });

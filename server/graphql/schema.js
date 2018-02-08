@@ -8,7 +8,6 @@ import {
   userMutations,
 } from './users/users';
 
-
 export default new GraphQLSchema({
   query: new GraphQLObjectType({
     name: 'Query',

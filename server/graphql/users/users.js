@@ -2,8 +2,10 @@ import {
   GraphQLList,
   GraphQLNonNull,
 } from 'graphql';
-import { internet, random } from 'faker';
+import { random } from 'faker';
 import isEmail from 'validator/lib/isEmail';
+import execSQLFactory from '../../helper';
+import UserModel from '../../model/user';
 
 import {
   UserType,
@@ -14,18 +16,9 @@ const userQueries = {
   users: {
     type: new GraphQLList(UserType),
     resolve: async () => {
-      const users = await new Promise(resolve =>
-        setTimeout(() =>
-          resolve(new Array(10).fill(undefined).map(() => ({
-            id: random.uuid(),
-            email: internet.email(),
-          }))), 100),
-      );
-      // const querySQL = `REPLACE INTO MaterialWeight (parentId, childId, org_id, amount) VALUES ${contents.join(', ')}`;
-      // await execSQLFactory(querySQL, {
-      //   type: Sequelize.QueryTypes.UPSERT,
-      //   transaction,
-      // });
+      const querySQL = 'SELECT id, name, password FROM Users AS User';
+      const users = await execSQLFactory(querySQL, { model: UserModel });
+      console.log(users);
       return users;
     },
   },
