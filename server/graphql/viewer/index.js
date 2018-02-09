@@ -1,8 +1,11 @@
 import { GraphQLObjectType } from 'graphql';
 import graphqlRelay from '../../graphqlRelay';
-import { UsersType } from '../users/usersTypes';
+import { UserType } from '../users/usersTypes';
 import { CommodityType } from '../commodities/commoditiesTypes';
-import { getViewer } from '../../domain/viewer';
+// import { getViewer } from '../../domain/viewer';
+import execSQLFactory from '../../helper';
+import UserModel from '../../model/user';
+import CommoditiesModel from '../../model/commodity';
 
 const Viewer = new GraphQLObjectType({
   name: 'Viewer',
@@ -10,12 +13,19 @@ const Viewer = new GraphQLObjectType({
   fields: () => Object.assign({
     id: graphqlRelay.globalId,
     users: {
-      type: UsersType,
-      resolve: viewer => viewer.users,
+      type: UserType,
+      resolve: async (viewer) => {
+        console.log(viewer.users);
+        const users = await viewer.users;
+        return users[0].dataValues;
+      },
     },
     commodities: {
       type: CommodityType,
-      resolve: viewer => viewer.commodities,
+      resolve: async (viewer) => {
+        const commodities = await viewer.commodities;
+        return commodities[0].dataValues;
+      },
     },
   }),
 });
@@ -23,7 +33,16 @@ const Viewer = new GraphQLObjectType({
 const viewerQueries = {
   viewer: {
     type: Viewer,
-    resolve: () => getViewer(),
+    resolve: async () => {
+      const querySQL = 'SELECT * FROM Users';
+      const users = await execSQLFactory(querySQL, { model: UserModel });
+      const querySQL1 = 'SELECT * FROM Commodities';
+      const commodities = await execSQLFactory(querySQL1, { model: CommoditiesModel });
+      return {
+        users,
+        commodities,
+      };
+    },
   },
 };
 

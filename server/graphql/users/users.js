@@ -4,8 +4,6 @@ import {
 } from 'graphql';
 import { random } from 'faker';
 import isEmail from 'validator/lib/isEmail';
-import execSQLFactory from '../../helper';
-import UserModel from '../../model/user';
 
 import {
   UserType,
@@ -15,11 +13,7 @@ import {
 const userQueries = {
   users: {
     type: new GraphQLList(UserType),
-    resolve: async () => {
-      const querySQL = 'SELECT id, name, password, accountImage, sex, nickName, phoneNumber FROM Users';
-      const users = await execSQLFactory(querySQL, { model: UserModel });
-      return users;
-    },
+    resolve: users => users,
   },
 };
 

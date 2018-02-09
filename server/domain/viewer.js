@@ -15,21 +15,18 @@ import execSQLFactory from '../helper';
 import UserModel from '../model/user';
 import CommoditiesModel from '../model/commodity';
 
-const users = async () => {
-  const querySQL = 'SELECT id, name, password, accountImage, sex, nickName, phoneNumber FROM Users';
-  const usersData = await execSQLFactory(querySQL, { model: UserModel });
-  console.log(usersData);
-  return usersData;
-};
-const commodities = async () => {
-  const querySQL = 'SELECT id, name, price, image, category, goodsDesc FROM Commodities';
-  const commoditiesData = await execSQLFactory(querySQL, { model: CommoditiesModel });
-  return commoditiesData;
+const usersData = () => {
+  const querySQL = 'SELECT * FROM Users';
+  const users = execSQLFactory(querySQL, { model: UserModel });
+  return users;
 };
 
+const querySQL1 = 'SELECT id, name, price, image, category, goodsDesc FROM Commodities';
+const commoditiesData = execSQLFactory(querySQL1, { model: CommoditiesModel });
+
 export const getViewer = () => ({
-  users: users(),
-  commodities: commodities(),
+  users: usersData,
+  commodities: commoditiesData,
 });
-console.log(getViewer());
+
 export default 'dummy';

@@ -4,8 +4,24 @@ import {
   GraphQLInputObjectType,
   GraphQLObjectType,
 } from 'graphql';
+
+// import {
+//   connectionArgs,
+//   connectionDefinitions,
+//   connectionFromArray,
+//   cursorForObjectInConnection,
+//   nodeDefinitions,
+// } from 'graphql-relay';
+
 import graphqlRelay from '../../graphqlRelay';
 
+// const {
+//   connectionType: UsersConnection,
+//   edgeType: GraphQLUserEdge,
+// } = connectionDefinitions({
+//   name: 'User',
+//   nodeType: User,
+// });
 const UserType = new GraphQLObjectType({
   name: 'UserType',
   description: 'User信息',
