@@ -16,9 +16,8 @@ const userQueries = {
   users: {
     type: new GraphQLList(UserType),
     resolve: async () => {
-      const querySQL = 'SELECT id, name, password FROM Users AS User';
+      const querySQL = 'SELECT id, name, password, accountImage, sex, nickName, phoneNumber FROM Users';
       const users = await execSQLFactory(querySQL, { model: UserModel });
-      console.log(users);
       return users;
     },
   },

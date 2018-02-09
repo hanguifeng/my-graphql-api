@@ -19,6 +19,22 @@ const UserType = new GraphQLObjectType({
       type: GraphQLString,
       resolve: async users => users.password,
     },
+    sex: {
+      type: GraphQLString,
+      resolve: async users => users.sex,
+    },
+    nickName: {
+      type: GraphQLString,
+      resolve: async users => users.nickName,
+    },
+    phoneNumber: {
+      type: GraphQLString,
+      resolve: async users => users.phoneNumber,
+    },
+    accountImage: {
+      type: GraphQLString,
+      resolve: async users => users.accountImage,
+    },
   }),
 });
 
