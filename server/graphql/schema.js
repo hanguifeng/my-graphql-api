@@ -3,22 +3,24 @@ import {
   GraphQLObjectType,
 } from 'graphql';
 
+import { viewerQueries } from './viewer';
 import {
-  userQueries,
-  userMutations,
-} from './users/users';
+  createToken,
+  createUser,
+} from './users';
 
 export default new GraphQLSchema({
   query: new GraphQLObjectType({
     name: 'Query',
     fields: () => ({
-      ...userQueries,
+      ...viewerQueries,
     }),
   }),
   mutation: new GraphQLObjectType({
     name: 'Mutation',
     fields: () => ({
-      ...userMutations,
+      createToken,
+      createUser,
     }),
   }),
 });

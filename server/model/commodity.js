@@ -1,11 +1,11 @@
 import DataType from 'sequelize';
 import { sequelize } from '../sequelize';
 
-const UserModel = sequelize.define('User', {
+const CommodityModel = sequelize.define('Commoditie', {
   type: {
     type: new DataType.VIRTUAL(DataType.STRING),
     get() {
-      return 'UserType';
+      return 'CommodityType';
     },
   },
   id: {
@@ -15,28 +15,24 @@ const UserModel = sequelize.define('User', {
   },
   name: {
     type: DataType.STRING,
-    allowNull: true,
+    allowNull: false,
   },
-  password: {
+  price: {
+    type: DataType.DECIMAL,
+    allowNull: false,
+  },
+  image: {
     type: DataType.STRING,
     allowNull: false,
   },
-  sex: {
-    type: DataType.STRING,
-    allowNull: true,
-  },
-  nickName: {
+  desc: {
     type: DataType.STRING,
     allowNull: false,
   },
-  phoneNumber: {
+  category: {
     type: DataType.STRING,
     allowNull: false,
-  },
-  accountImage: {
-    type: DataType.STRING,
-    allowNull: true,
   },
 });
 
-export default UserModel;
+export default CommodityModel;
