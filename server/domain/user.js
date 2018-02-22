@@ -17,6 +17,11 @@ export class UserDomain {
   static async create(user) {
     return await UserModel.create(user);
   }
+  static async findOneById(id) {
+    const querySQL = `SELECT * FROM Users WHERE id="${id}"`;
+    const user = execSQLFactory(querySQL, { model: UserModel });
+    return user;
+  }
 }
 
 export default 'dummy';

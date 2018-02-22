@@ -3,14 +3,16 @@ import {
   connectionArgs,
   connectionFromPromisedArray,
   globalIdField,
+  fromGlobalId,
 } from 'graphql-relay';
-import { UsersConnection } from '../users';
+import { UsersConnection, UserType } from '../users';
 import { CommoditiesConnection } from '../commodities';
 import { NewsConnection } from '../news';
 import execSQLFactory from '../../helper';
 import { UserModel, CommoditiesModel, NewModel } from '../../model';
 import { CommodityDomain, NewsDomain } from '../../domain';
 import newsSpider from '../../newsSpider';
+import { UserDomain } from '../../domain/user';
 // import { nodeInterface } from '../../relay';
 // newsSpider();
 const Viewer = new GraphQLObjectType({
@@ -26,6 +28,20 @@ const Viewer = new GraphQLObjectType({
           const users = await viewer.users;
           return users;
         })(), args),
+    },
+    user: {
+      type: UserType,
+      args: {
+        id: {
+          type: GraphQLString,
+        },
+      },
+      resolve: (viewer, { id }) =>
+        (async () => {
+          const user = await UserDomain.findOneById(fromGlobalId(id).id);
+          console.log(user);
+          return user[0].dataValues;
+        })(),
     },
     commodities: {
       type: CommoditiesConnection,

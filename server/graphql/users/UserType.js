@@ -48,17 +48,4 @@ export const {
   nodeType: UserType,
 });
 
-const UserInputType = new GraphQLInputObjectType({
-  name: 'UserInputType',
-  description: 'User payload definition',
-  fields: () => ({
-    email: {
-      type: new GraphQLNonNull(GraphQLString),
-    },
-  }),
-});
-
-export {
-  UserInputType,
-};
 export default 'dummy';
