@@ -1,16 +1,18 @@
 import {
   GraphQLString,
-  // GraphQLNonNull,
   GraphQLFloat,
   GraphQLObjectType,
 } from 'graphql';
-import graphqlRelay from '../../graphqlRelay';
+import {
+  connectionDefinitions,
+  globalIdField,
+} from 'graphql-relay';
 
 const CommodityType = new GraphQLObjectType({
   name: 'CommodityType',
   description: 'Commodity信息',
   fields: () => Object.assign({
-    id: graphqlRelay.globalId,
+    id: globalIdField('CommodityType'),
     name: {
       type: GraphQLString,
       resolve: async commodities => commodities.name,
@@ -23,15 +25,22 @@ const CommodityType = new GraphQLObjectType({
       type: GraphQLString,
       resolve: async commodities => commodities.image,
     },
-    goodsDesc: {
+    desc: {
       type: GraphQLString,
-      resolve: async commodities => commodities.goodsDesc,
+      resolve: async commodities => commodities.desc,
     },
     category: {
       type: GraphQLString,
       resolve: async commodities => commodities.category,
     },
   }),
+});
+
+export const {
+  connectionType: CommoditiesConnection,
+} = connectionDefinitions({
+  name: 'CommodityType',
+  nodeType: CommodityType,
 });
 
 export { CommodityType };

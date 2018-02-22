@@ -1,33 +1,96 @@
-import { GraphQLObjectType } from 'graphql';
-import graphqlRelay from '../../graphqlRelay';
-import { UserType } from '../users/usersTypes';
-import { CommodityType } from '../commodities/commoditiesTypes';
-// import { getViewer } from '../../domain/viewer';
+import { GraphQLObjectType, GraphQLString, GraphQLInt } from 'graphql';
+import {
+  connectionArgs,
+  connectionFromPromisedArray,
+  globalIdField,
+  fromGlobalId,
+} from 'graphql-relay';
+import { UsersConnection, UserType } from '../users';
+import { CommoditiesConnection } from '../commodities';
+import { NewsConnection } from '../news';
 import execSQLFactory from '../../helper';
-import UserModel from '../../model/user';
-import CommoditiesModel from '../../model/commodity';
-
+import { UserModel, CommoditiesModel, NewModel } from '../../model';
+import { CommodityDomain, NewsDomain } from '../../domain';
+import newsSpider from '../../newsSpider';
+import { UserDomain } from '../../domain/user';
+// import { nodeInterface } from '../../relay';
+// newsSpider();
 const Viewer = new GraphQLObjectType({
   name: 'Viewer',
   description: '根节点',
   fields: () => Object.assign({
-    id: graphqlRelay.globalId,
+    id: globalIdField('Viewer'),
     users: {
+      type: UsersConnection,
+      args: connectionArgs,
+      resolve: (viewer, args) => connectionFromPromisedArray(
+        (async () => {
+          const users = await viewer.users;
+          return users;
+        })(), args),
+    },
+    user: {
       type: UserType,
-      resolve: async (viewer) => {
-        console.log(viewer.users);
-        const users = await viewer.users;
-        return users[0].dataValues;
+      args: {
+        id: {
+          type: GraphQLString,
+        },
       },
+      resolve: (viewer, { id }) =>
+        (async () => {
+          const user = await UserDomain.findOneById(fromGlobalId(id).id);
+          console.log(user);
+          return user[0].dataValues;
+        })(),
     },
     commodities: {
-      type: CommodityType,
-      resolve: async (viewer) => {
-        const commodities = await viewer.commodities;
-        return commodities[0].dataValues;
+      type: CommoditiesConnection,
+      args: {
+        category: {
+          type: GraphQLString,
+        },
+        from: {
+          type: GraphQLInt,
+        },
+        ...connectionArgs,
       },
+      resolve: (viewer, { category, from, ...args }) => connectionFromPromisedArray(
+        (async () => {
+          const commodities = viewer.commodities;
+          if (from && !category) {
+            const commoditiesByFrom = await CommodityDomain.getFromData(commodities, from);
+            return commoditiesByFrom;
+          } else if (category && !from) {
+            const commoditiesByCategory =
+              await CommodityDomain.findCommoditiesByCategory(viewer.commodities, category);
+            return commoditiesByCategory;
+          } else if (category && from) {
+            const commoditiesByCategory =
+              await CommodityDomain.findCommoditiesByCategory(commodities, category);
+            const commoditiesByFrom =
+              await CommodityDomain.getFromData(commoditiesByCategory, from);
+            return commoditiesByFrom;
+          }
+          return commodities;
+        })(), args),
+    },
+    news: {
+      type: NewsConnection,
+      args: {
+        from: {
+          type: GraphQLInt,
+        },
+        ...connectionArgs,
+      },
+      resolve: (viewer, { from, ...args }) => connectionFromPromisedArray(
+        (async () => {
+          const news =
+            await NewsDomain.getFromData(viewer.news, from);
+          return news;
+        })(), args),
     },
   }),
+  // interfaces: [nodeInterface],
 });
 
 const viewerQueries = {
@@ -38,9 +101,12 @@ const viewerQueries = {
       const users = await execSQLFactory(querySQL, { model: UserModel });
       const querySQL1 = 'SELECT * FROM Commodities';
       const commodities = await execSQLFactory(querySQL1, { model: CommoditiesModel });
+      const querySQL2 = 'SELECT * FROM News';
+      const news = await execSQLFactory(querySQL2, { model: NewModel });
       return {
         users,
         commodities,
+        news,
       };
     },
   },
