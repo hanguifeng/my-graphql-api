@@ -1,42 +1,38 @@
 import DataType from 'sequelize';
 import { sequelize } from '../sequelize';
 
-const UserModel = sequelize.define('User', {
+const NewModel = sequelize.define('New', {
   type: {
     type: new DataType.VIRTUAL(DataType.STRING),
     get() {
-      return 'UserType';
+      return 'NewType';
     },
   },
   id: {
     type: DataType.STRING,
-    allowNull: false,
+    allowNull: true,
     primaryKey: true,
   },
-  name: {
+  time: {
     type: DataType.STRING,
     allowNull: true,
   },
-  password: {
-    type: DataType.STRING,
-    allowNull: false,
-  },
-  sex: {
+  title: {
     type: DataType.STRING,
     allowNull: true,
   },
-  nickName: {
-    type: DataType.STRING,
-    allowNull: false,
-  },
-  phoneNumber: {
-    type: DataType.STRING,
-    allowNull: false,
-  },
-  accountImage: {
+  url: {
     type: DataType.STRING,
     allowNull: true,
   },
+  // content: {
+  //   type: DataType.STRING,
+  //   allowNull: true,
+  // },
+  // image: {
+  //   type: DataType.STRING,
+  //   allowNull: true,
+  // },
 });
 
-export default UserModel;
+export default NewModel;

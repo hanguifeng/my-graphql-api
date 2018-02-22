@@ -4,54 +4,48 @@ import {
   GraphQLInputObjectType,
   GraphQLObjectType,
 } from 'graphql';
+import {
+  connectionDefinitions,
+  globalIdField,
+} from 'graphql-relay';
 
-// import {
-//   connectionArgs,
-//   connectionDefinitions,
-//   connectionFromArray,
-//   cursorForObjectInConnection,
-//   nodeDefinitions,
-// } from 'graphql-relay';
-
-import graphqlRelay from '../../graphqlRelay';
-
-// const {
-//   connectionType: UsersConnection,
-//   edgeType: GraphQLUserEdge,
-// } = connectionDefinitions({
-//   name: 'User',
-//   nodeType: User,
-// });
-const UserType = new GraphQLObjectType({
+export const UserType = new GraphQLObjectType({
   name: 'UserType',
   description: 'User信息',
   fields: () => Object.assign({
-    id: graphqlRelay.globalId,
+    id: globalIdField('UserType'),
     name: {
       type: GraphQLString,
-      resolve: async users => users.name,
+      resolve: async user => user.name,
     },
     password: {
       type: GraphQLString,
-      resolve: async users => users.password,
+      resolve: async user => user.password,
     },
     sex: {
       type: GraphQLString,
-      resolve: async users => users.sex,
+      resolve: async user => user.sex,
     },
     nickName: {
       type: GraphQLString,
-      resolve: async users => users.nickName,
+      resolve: async user => user.nickName,
     },
     phoneNumber: {
       type: GraphQLString,
-      resolve: async users => users.phoneNumber,
+      resolve: async user => user.phoneNumber,
     },
     accountImage: {
       type: GraphQLString,
-      resolve: async users => users.accountImage,
+      resolve: async user => user.accountImage,
     },
   }),
+});
+
+export const {
+  connectionType: UsersConnection,
+} = connectionDefinitions({
+  name: 'UserType',
+  nodeType: UserType,
 });
 
 const UserInputType = new GraphQLInputObjectType({
@@ -65,7 +59,6 @@ const UserInputType = new GraphQLInputObjectType({
 });
 
 export {
-  UserType,
   UserInputType,
 };
 export default 'dummy';

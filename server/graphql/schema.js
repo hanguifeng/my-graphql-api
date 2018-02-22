@@ -4,11 +4,10 @@ import {
 } from 'graphql';
 
 import { viewerQueries } from './viewer';
-// import { commoditiesQueries } from './commodities/commodities';
 import {
-  // userQueries,
-  userMutations,
-} from './users/users';
+  createToken,
+  createUser,
+} from './users';
 
 export default new GraphQLSchema({
   query: new GraphQLObjectType({
@@ -20,7 +19,8 @@ export default new GraphQLSchema({
   mutation: new GraphQLObjectType({
     name: 'Mutation',
     fields: () => ({
-      ...userMutations,
+      createToken,
+      createUser,
     }),
   }),
 });
