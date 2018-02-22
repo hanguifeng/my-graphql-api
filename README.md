@@ -8,5 +8,5 @@ npm i
 npm run dev
 
 访问graphqil
-http://localhost:3000/graphql.
+http://localhost:4000/graphql.
 
